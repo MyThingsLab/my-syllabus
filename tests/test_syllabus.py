@@ -3,7 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from mythings.corpus import ingest
-from mythings.engine import EngineRequest, EngineResult, NoopEngine
+from mythings.engine import NoopEngine
+from mythings.testing import ScriptedEngine
 
 from mysyllabus.syllabus import (
     decompose,
@@ -19,16 +20,6 @@ _PROGRAM = (
     "Module 2: Clustering. k-means; Gaussian mixture models and the EM algorithm.\n"
     "Module 3: Dimensionality reduction. PCA; factor analysis."
 )
-
-
-class ScriptedEngine:
-    def __init__(self, reply: str) -> None:
-        self.reply = reply
-        self.calls: list[EngineRequest] = []
-
-    def run(self, request: EngineRequest) -> EngineResult:
-        self.calls.append(request)
-        return EngineResult(text=self.reply, data={})
 
 
 def _docs():
