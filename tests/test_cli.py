@@ -37,15 +37,12 @@ def test_missing_program_files_is_an_error(
 
 def test_out_writes_a_toml_file(program: Path, tmp_path: Path, monkeypatch) -> None:
     # Scripted engine via a fake so the CLI produces real topics without billing.
-    from mythings.engine import EngineResult
+    from mythings.testing import ScriptedEngine
 
     import mysyllabus.cli as cli
 
-    class Fake:
-        def run(self, _request):
-            return EngineResult(text='{"topics": [{"title": "k-means", "unit": "Clustering"}]}')
-
-    monkeypatch.setattr(cli, "_engine", lambda _name: Fake())
+    reply = '{"topics": [{"title": "k-means", "unit": "Clustering"}]}'
+    monkeypatch.setattr(cli, "_engine", lambda _name: ScriptedEngine(reply=reply))
     out = tmp_path / "topics.toml"
     rc = main(["decompose", "--program", str(program), "--engine", "claude", "--out", str(out)])
     assert rc == 0
