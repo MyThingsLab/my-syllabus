@@ -45,7 +45,7 @@ def test_out_writes_a_toml_file(program: Path, tmp_path: Path, monkeypatch) -> N
         def run(self, _request):
             return EngineResult(text='{"topics": [{"title": "k-means", "unit": "Clustering"}]}')
 
-    monkeypatch.setattr(cli, "_engine", lambda _name: Fake())
+    monkeypatch.setattr(cli, "build_engine_from_args", lambda args: Fake())
     out = tmp_path / "topics.toml"
     rc = main(["decompose", "--program", str(program), "--engine", "claude", "--out", str(out)])
     assert rc == 0
