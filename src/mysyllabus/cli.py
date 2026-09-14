@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from mythings.engine import ClaudeCLIEngine, Engine, NoopEngine
+from mythings.engine import build_engine_from_args
 
 from mysyllabus.syllabus import (
     decompose,
@@ -14,10 +14,6 @@ from mysyllabus.syllabus import (
 )
 
 BACKLOG_LABEL = "my-syllabus"
-
-
-def _engine(name: str) -> Engine:
-    return NoopEngine() if name == "noop" else ClaudeCLIEngine()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -44,7 +40,7 @@ def main(argv: list[str] | None = None) -> int:
         print("no program files found")
         return 1
 
-    topics = decompose(documents, _engine(args.engine), max_topics=args.max_topics)
+    topics = decompose(documents, build_engine_from_args(args), max_topics=args.max_topics)
     rendered = to_toml(topics) if args.format == "toml" else to_markdown(topics)
 
     if args.out is not None:
